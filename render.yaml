@@ -1,0 +1,22 @@
+# Deploy di riferimento su Render (in alternativa: Railway, che autodetecta
+# un progetto Node/pnpm senza bisogno di configurazione dichiarativa).
+services:
+  - type: web
+    name: shop-api
+    runtime: node
+    rootDir: apps/api
+    buildCommand: "corepack enable && pnpm install --frozen-lockfile && pnpm prisma:generate && pnpm build"
+    startCommand: "pnpm start"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
+      - key: WEB_ORIGIN
+        sync: false
+
+databases:
+  - name: shop-db
+    plan: free
