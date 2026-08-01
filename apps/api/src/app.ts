@@ -5,6 +5,8 @@ import { pinoHttp } from 'pino-http';
 import { env } from './config/env.js';
 import { errorHandler } from './middlewares/error-handler.js';
 import { healthRouter } from './modules/health/health.routes.js';
+import { categoryRouter } from './modules/categories/category.routes.js';
+import { productRouter } from './modules/products/product.routes.js';
 
 export function createApp() {
   const app = express();
@@ -33,8 +35,10 @@ export function createApp() {
   );
 
   app.use('/api', healthRouter);
-  // Le rotte dei moduli (products, categories, orders, auth) verranno montate qui
-  // via app.use('/api/...', ...Router) man mano che vengono implementate (M1-M4).
+  app.use('/api/categories', categoryRouter);
+  app.use('/api/products', productRouter);
+  // Le rotte admin (prodotti/categorie CRUD, ordini, auth) verranno montate qui
+  // sotto /api/admin man mano che vengono implementate (M3-M4).
 
   app.use(errorHandler);
 
