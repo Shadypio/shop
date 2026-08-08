@@ -7,6 +7,7 @@ import { errorHandler } from './middlewares/error-handler.js';
 import { healthRouter } from './modules/health/health.routes.js';
 import { categoryRouter } from './modules/categories/category.routes.js';
 import { productRouter } from './modules/products/product.routes.js';
+import { orderRouter } from './modules/orders/order.routes.js';
 
 export function createApp() {
   const app = express();
@@ -37,6 +38,7 @@ export function createApp() {
   app.use('/api', healthRouter);
   app.use('/api/categories', categoryRouter);
   app.use('/api/products', productRouter);
+  app.use('/api/orders', orderRouter);
   // Le rotte admin (prodotti/categorie CRUD, ordini, auth) verranno montate qui
   // sotto /api/admin man mano che vengono implementate (M3-M4).
 

@@ -1,10 +1,16 @@
+import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useProduct } from '../queries';
 import { formatPrice } from '../../../lib/format';
+import { useCartStore } from '../../../store/cart-store';
+import { QuantityStepper } from '../components/QuantityStepper';
 
 export function ProductPage() {
   const { slug = '' } = useParams();
   const { data: product, isLoading, isError } = useProduct(slug);
+  const addItem = useCartStore((state) => state.addItem);
+  const [quantity, setQuantity] = useState(1);
+  const [added, setAdded] = useState(false);
 
   if (isLoading) {
     return <p className="text-sm text-gray-500">Caricamento prodotto…</p>;
@@ -12,6 +18,13 @@ export function ProductPage() {
 
   if (isError || !product) {
     return <p className="text-sm text-red-600">Prodotto non trovato.</p>;
+  }
+
+  function handleAddToCart() {
+    if (!product) return;
+    addItem({ productId: product.id, name: product.name, unitPrice: product.price }, quantity);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
   }
 
   return (
@@ -43,6 +56,19 @@ export function ProductPage() {
           ) : null}
           {product.description ? (
             <p className="mt-2 text-sm text-gray-600">{product.description}</p>
+          ) : null}
+
+          {product.available ? (
+            <div className="mt-4 flex items-center gap-3">
+              <QuantityStepper value={quantity} onChange={setQuantity} />
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                className="flex-1 rounded-lg bg-gray-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-gray-700 cursor-pointer"
+              >
+                {added ? 'Aggiunto ✓' : 'Aggiungi al carrello'}
+              </button>
+            </div>
           ) : null}
         </div>
       </div>

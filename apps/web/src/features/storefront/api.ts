@@ -1,5 +1,11 @@
 import { apiClient } from '../../lib/api-client';
-import type { Category, ProductDetail, ProductListItem } from './types';
+import type {
+  Category,
+  CreateOrderPayload,
+  OrderConfirmation,
+  ProductDetail,
+  ProductListItem,
+} from './types';
 
 export const storefrontApi = {
   getCategories: () => apiClient.get<Category[]>('/categories'),
@@ -12,4 +18,6 @@ export const storefrontApi = {
     return apiClient.get<ProductListItem[]>(`/products${qs ? `?${qs}` : ''}`);
   },
   getProductBySlug: (slug: string) => apiClient.get<ProductDetail>(`/products/${slug}`),
+  createOrder: (payload: CreateOrderPayload) =>
+    apiClient.post<OrderConfirmation>('/orders', payload),
 };

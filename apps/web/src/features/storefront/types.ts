@@ -24,3 +24,22 @@ export interface ProductDetail {
   category: Category;
   images: string[];
 }
+
+export type DeliveryMethod = 'DELIVERY' | 'PICKUP';
+
+export interface CreateOrderPayload {
+  customerName: string;
+  customerSurname: string;
+  phone: string;
+  address?: string;
+  notes?: string;
+  deliveryMethod: DeliveryMethod;
+  items: { productId: string; quantity: number }[];
+}
+
+export interface OrderConfirmation {
+  id: string;
+  status: string;
+  total: number;
+  createdAt: string;
+}
