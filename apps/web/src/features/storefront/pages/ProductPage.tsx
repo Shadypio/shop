@@ -1,77 +1,110 @@
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link as RouterLink, useParams } from 'react-router-dom';
+import { Alert, Box, Button, Chip, Snackbar, Stack, Typography } from '@mui/material';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { useProduct } from '../queries';
 import { formatPrice } from '../../../lib/format';
 import { useCartStore } from '../../../store/cart-store';
-import { QuantityStepper } from '../components/QuantityStepper';
+import { QuantityStepper } from '../../../components/domain/QuantityStepper';
 
 export function ProductPage() {
   const { slug = '' } = useParams();
   const { data: product, isLoading, isError } = useProduct(slug);
   const addItem = useCartStore((state) => state.addItem);
   const [quantity, setQuantity] = useState(1);
-  const [added, setAdded] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   if (isLoading) {
-    return <p className="text-sm text-gray-500">Caricamento prodotto…</p>;
+    return (
+      <Typography variant="body2" color="text.secondary">
+        Caricamento prodotto…
+      </Typography>
+    );
   }
 
   if (isError || !product) {
-    return <p className="text-sm text-red-600">Prodotto non trovato.</p>;
+    return <Alert severity="error">Prodotto non trovato.</Alert>;
   }
 
   function handleAddToCart() {
     if (!product) return;
     addItem({ productId: product.id, name: product.name, unitPrice: product.price }, quantity);
-    setAdded(true);
-    setTimeout(() => setAdded(false), 2000);
+    setSnackbarOpen(true);
   }
 
   return (
-    <div>
-      <Link
+    <Box>
+      <Button
+        component={RouterLink}
         to={`/categoria/${product.category.slug}`}
-        className="mb-4 inline-block text-sm text-gray-500 hover:text-gray-700"
+        startIcon={<ArrowBackIosNewIcon fontSize="small" />}
+        sx={{ mb: 2 }}
       >
-        &lsaquo; {product.category.name}
-      </Link>
+        {product.category.name}
+      </Button>
 
-      <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-        <div className="aspect-square w-full bg-gray-100">
-          {product.images[0] ? (
-            <img
-              src={product.images[0]}
-              alt={product.name}
-              className="h-full w-full object-cover"
+      <Box
+        sx={{
+          borderRadius: 2,
+          overflow: 'hidden',
+          border: 1,
+          borderColor: 'divider',
+          bgcolor: 'background.paper',
+        }}
+      >
+        <Box
+          sx={{
+            aspectRatio: '1 / 1',
+            bgcolor: 'grey.100',
+            backgroundImage: product.images[0] ? `url(${product.images[0]})` : undefined,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+          role="img"
+          aria-label={product.name}
+        />
+        <Stack spacing={1.5} sx={{ p: 3 }}>
+          <Typography variant="h6" fontWeight={700}>
+            {product.name}
+          </Typography>
+          <Typography variant="h5" fontWeight={700}>
+            {formatPrice(product.price)}
+          </Typography>
+          {!product.available ? (
+            <Chip
+              label="Momentaneamente non disponibile"
+              color="warning"
+              size="small"
+              sx={{ width: 'fit-content' }}
             />
           ) : null}
-        </div>
-        <div className="flex flex-col gap-2 p-4">
-          <h1 className="text-lg font-semibold text-gray-900">{product.name}</h1>
-          <span className="text-xl font-bold text-gray-900">{formatPrice(product.price)}</span>
-          {!product.available ? (
-            <span className="w-fit rounded bg-amber-100 px-2 py-1 text-xs font-medium text-amber-800">
-              Momentaneamente non disponibile
-            </span>
-          ) : null}
           {product.description ? (
-            <p className="mt-2 text-sm text-gray-600">{product.description}</p>
+            <Typography variant="body2" color="text.secondary">
+              {product.description}
+            </Typography>
           ) : null}
 
           {product.available ? (
-            <div className="mt-4 flex items-center gap-3">
+            <Stack direction="row" spacing={2} alignItems="center" sx={{ mt: 1 }}>
               <QuantityStepper value={quantity} onChange={setQuantity} />
-              <button
-                type="button"
-                onClick={handleAddToCart}
-                className="flex-1 rounded-lg bg-gray-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-gray-700 cursor-pointer"
-              >
-                {added ? 'Aggiunto ✓' : 'Aggiungi al carrello'}
-              </button>
-            </div>
+              <Button variant="contained" size="large" fullWidth onClick={handleAddToCart}>
+                Aggiungi al carrello
+              </Button>
+            </Stack>
           ) : null}
-        </div>
-      </div>
-    </div>
+        </Stack>
+      </Box>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={2000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert severity="success" variant="filled" onClose={() => setSnackbarOpen(false)}>
+          Prodotto aggiunto al carrello
+        </Alert>
+      </Snackbar>
+    </Box>
   );
 }

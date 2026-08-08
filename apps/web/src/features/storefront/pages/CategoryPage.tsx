@@ -1,6 +1,8 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link as RouterLink, useParams } from 'react-router-dom';
+import { Alert, Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { useCategory, useProducts } from '../queries';
-import { ProductCard } from '../components/ProductCard';
+import { ProductGrid } from '../../../components/domain/ProductGrid';
 
 export function CategoryPage() {
   const { slug = '' } = useParams();
@@ -14,27 +16,31 @@ export function CategoryPage() {
   const isLoading = isCategoryLoading || isProductsLoading;
 
   return (
-    <div>
-      <Link to="/" className="mb-4 inline-block text-sm text-gray-500 hover:text-gray-700">
-        &lsaquo; Tutte le categorie
-      </Link>
-      <h1 className="mb-4 text-xl font-semibold text-gray-900">
+    <Box>
+      <Button
+        component={RouterLink}
+        to="/"
+        startIcon={<ArrowBackIosNewIcon fontSize="small" />}
+        sx={{ mb: 1 }}
+      >
+        Tutte le categorie
+      </Button>
+      <Typography variant="h5" fontWeight={700} sx={{ mb: 3 }}>
         {category?.name ?? (isLoading ? 'Caricamento…' : 'Categoria')}
-      </h1>
+      </Typography>
 
       {isLoading ? (
-        <p className="text-sm text-gray-500">Caricamento prodotti…</p>
+        <Stack alignItems="center" sx={{ py: 4 }}>
+          <CircularProgress size={28} />
+        </Stack>
       ) : isError ? (
-        <p className="text-sm text-red-600">Impossibile caricare i prodotti. Riprova più tardi.</p>
-      ) : !products || products.length === 0 ? (
-        <p className="text-sm text-gray-500">Nessun prodotto disponibile in questa categoria.</p>
+        <Alert severity="error">Impossibile caricare i prodotti. Riprova più tardi.</Alert>
       ) : (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        <ProductGrid
+          products={products ?? []}
+          emptyMessage="Nessun prodotto disponibile in questa categoria."
+        />
       )}
-    </div>
+    </Box>
   );
 }

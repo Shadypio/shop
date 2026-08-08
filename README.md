@@ -34,13 +34,13 @@ Verifica rapida: `GET http://localhost:4000/api/health` deve rispondere `{ "stat
 
 ## Script principali
 
-| Comando | Descrizione |
-|---|---|
-| `pnpm build` | Build di tutti i workspace |
-| `pnpm --filter api lint` | Lint backend |
-| `pnpm --filter api typecheck` | Typecheck backend |
-| `pnpm --filter api test` | Test backend (Vitest) |
-| `pnpm --filter web build` | Build produzione frontend |
+| Comando                       | Descrizione                |
+| ----------------------------- | -------------------------- |
+| `pnpm build`                  | Build di tutti i workspace |
+| `pnpm --filter api lint`      | Lint backend               |
+| `pnpm --filter api typecheck` | Typecheck backend          |
+| `pnpm --filter api test`      | Test backend (Vitest)      |
+| `pnpm --filter web build`     | Build produzione frontend  |
 
 ## Struttura
 
@@ -58,8 +58,8 @@ packages/shared-types → tipi/DTO condivisi tra web e api (popolato quando serv
 ## Stato del progetto
 
 - ✅ M0 — Setup monorepo, CI, schema Prisma iniziale, deploy skeleton
-- ⏳ M1 — Catalogo pubblico (categorie, prodotti, immagini)
-- ⏳ M2 — Carrello & checkout
+- ✅ M1 — Catalogo pubblico (categorie, prodotti, immagini)
+- ✅ M2 — Carrello & checkout
 - ⏳ M3 — Admin: autenticazione, prodotti, categorie
 - ⏳ M4 — Admin: ordini & dashboard
 - ⏳ M5 — Hardening & lancio

@@ -1,4 +1,6 @@
-import { Link, Navigate, useLocation } from 'react-router-dom';
+import { Link as RouterLink, Navigate, useLocation } from 'react-router-dom';
+import { Box, Button, Paper, Stack, Typography } from '@mui/material';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { formatPrice } from '../../../lib/format';
 import type { OrderConfirmation } from '../types';
 
@@ -15,25 +17,31 @@ export function OrderConfirmationPage() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-4 rounded-lg border border-gray-200 bg-white p-6 text-center">
-      <span className="text-4xl">✅</span>
-      <h1 className="text-xl font-semibold text-gray-900">Richiesta d'ordine inviata!</h1>
-      <p className="text-sm text-gray-600">
-        Il negozio verificherà la disponibilità e ti contatterà a breve per confermare i dettagli.
-        Il pagamento avviene alla consegna o al ritiro.
-      </p>
-      <div className="w-full rounded-lg bg-gray-50 p-4 text-sm text-gray-700">
-        <p>
-          Numero ordine: <span className="font-mono">{order.id.slice(-8)}</span>
-        </p>
-        <p className="mt-1 font-semibold text-gray-900">Totale: {formatPrice(order.total)}</p>
-      </div>
-      <Link
-        to="/"
-        className="mt-2 w-full rounded-lg bg-gray-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-gray-700"
-      >
-        Torna al catalogo
-      </Link>
-    </div>
+    <Paper variant="outlined" sx={{ p: 4, borderRadius: 2, textAlign: 'center' }}>
+      <Stack spacing={2} alignItems="center">
+        <CheckCircleOutlineIcon color="success" sx={{ fontSize: 56 }} />
+        <Typography variant="h6" fontWeight={700}>
+          Richiesta d'ordine inviata!
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Il negozio verificherà la disponibilità e ti contatterà a breve per confermare i
+          dettagli. Il pagamento avviene alla consegna o al ritiro.
+        </Typography>
+        <Box sx={{ width: '100%', bgcolor: 'grey.50', borderRadius: 2, p: 2 }}>
+          <Typography variant="body2">
+            Numero ordine:{' '}
+            <Box component="span" sx={{ fontFamily: 'monospace' }}>
+              {order.id.slice(-8)}
+            </Box>
+          </Typography>
+          <Typography variant="subtitle1" fontWeight={700}>
+            Totale: {formatPrice(order.total)}
+          </Typography>
+        </Box>
+        <Button component={RouterLink} to="/" variant="contained" size="large" fullWidth>
+          Torna al catalogo
+        </Button>
+      </Stack>
+    </Paper>
   );
 }

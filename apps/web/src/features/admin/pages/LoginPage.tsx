@@ -1,8 +1,25 @@
+import { Box, Paper, Typography } from '@mui/material';
+
 export function AdminLoginPage() {
   return (
-    <div className="mx-auto flex min-h-svh max-w-sm flex-col justify-center px-4">
-      <h1 className="text-xl font-semibold text-gray-900">Accesso amministratore</h1>
-      <p className="mt-2 text-sm text-gray-600">Form di login in arrivo — M3.</p>
-    </div>
+    <Box
+      sx={{
+        minHeight: '100svh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        p: 2,
+        bgcolor: 'background.default',
+      }}
+    >
+      <Paper variant="outlined" sx={{ p: 4, maxWidth: 360, width: '100%', borderRadius: 2 }}>
+        <Typography variant="h6" fontWeight={700}>
+          Accesso amministratore
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+          Form di login in arrivo — M3.
+        </Typography>
+      </Paper>
+    </Box>
   );
 }
