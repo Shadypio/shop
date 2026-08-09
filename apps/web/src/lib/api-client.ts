@@ -29,6 +29,22 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     body: body !== undefined ? JSON.stringify(body) : undefined,
   });
 
+  return parseResponse<T>(response);
+}
+
+async function requestForm<T>(path: string, formData: FormData, method = 'POST'): Promise<T> {
+  // Niente header Content-Type esplicito: il browser imposta il boundary
+  // multipart corretto da solo quando il body è un FormData.
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method,
+    credentials: 'include',
+    body: formData,
+  });
+
+  return parseResponse<T>(response);
+}
+
+async function parseResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     const payload = await response.json().catch(() => null);
     throw new ApiError(
@@ -50,4 +66,5 @@ export const apiClient = {
   post: <T>(path: string, body?: unknown) => request<T>(path, { method: 'POST', body }),
   patch: <T>(path: string, body?: unknown) => request<T>(path, { method: 'PATCH', body }),
   delete: <T>(path: string) => request<T>(path, { method: 'DELETE' }),
+  postForm: <T>(path: string, formData: FormData) => requestForm<T>(path, formData, 'POST'),
 };

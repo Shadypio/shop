@@ -10,3 +10,4 @@ build/
 !.vscode/extensions.json
 coverage/
 .turbo/
+apps/api/uploads/

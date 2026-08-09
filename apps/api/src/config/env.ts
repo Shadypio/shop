@@ -9,6 +9,9 @@ const envSchema = z.object({
   DATABASE_URL: z.string().min(1, 'DATABASE_URL è obbligatoria'),
   SESSION_SECRET: z.string().min(10, 'SESSION_SECRET deve essere una stringa robusta'),
   WEB_ORIGIN: z.string().min(1).default('http://localhost:5173'),
+  // URL pubblico con cui il backend è raggiungibile: usato per comporre gli
+  // URL assoluti delle immagini caricate localmente (storage su disco).
+  API_PUBLIC_URL: z.string().min(1).default('http://localhost:4000'),
   // Slug dello shop attivo. Nell'MVP esiste un solo shop; questo campo prepara
   // il terreno per il multi-tenant futuro senza introdurne la complessità ora.
   SHOP_SLUG: z.string().min(1).default('shop-detersivi'),

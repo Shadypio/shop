@@ -37,4 +37,73 @@ export const productRepository = {
       include: detailInclude,
     });
   },
+
+  // Variante admin: tutti i prodotti dello shop, disponibili o meno.
+  findAllByShop(shopId: string) {
+    return prisma.product.findMany({
+      where: { shopId },
+      orderBy: { name: 'asc' },
+      include: detailInclude,
+    });
+  },
+
+  findById(shopId: string, id: string) {
+    return prisma.product.findFirst({ where: { id, shopId }, include: detailInclude });
+  },
+
+  findBySlugExcludingId(shopId: string, slug: string, excludeId?: string) {
+    return prisma.product.findFirst({ where: { shopId, slug, NOT: { id: excludeId } } });
+  },
+
+  create(
+    shopId: string,
+    data: {
+      name: string;
+      slug: string;
+      description?: string;
+      price: number;
+      categoryId: string;
+      available: boolean;
+    },
+  ) {
+    return prisma.product.create({ data: { ...data, shopId }, include: detailInclude });
+  },
+
+  update(
+    id: string,
+    data: Partial<{
+      name: string;
+      slug: string;
+      description: string | null;
+      price: number;
+      categoryId: string;
+      available: boolean;
+    }>,
+  ) {
+    return prisma.product.update({ where: { id }, data, include: detailInclude });
+  },
+
+  delete(id: string) {
+    return prisma.product.delete({ where: { id } });
+  },
+
+  countOrderItems(productId: string) {
+    return prisma.orderItem.count({ where: { productId } });
+  },
+
+  addImage(productId: string, url: string, position: number) {
+    return prisma.productImage.create({ data: { productId, url, position } });
+  },
+
+  countImages(productId: string) {
+    return prisma.productImage.count({ where: { productId } });
+  },
+
+  removeImage(imageId: string) {
+    return prisma.productImage.delete({ where: { id: imageId } });
+  },
+
+  findImageById(imageId: string) {
+    return prisma.productImage.findUnique({ where: { id: imageId } });
+  },
 };

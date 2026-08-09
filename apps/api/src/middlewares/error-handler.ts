@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
 import { ZodError } from 'zod';
+import { MulterError } from 'multer';
 import { AppError } from './app-error.js';
 
 export function errorHandler(
@@ -20,6 +21,12 @@ export function errorHandler(
         message: 'Dati non validi',
         details: err.flatten(),
       },
+    });
+  }
+
+  if (err instanceof MulterError) {
+    return res.status(400).json({
+      error: { code: 'UPLOAD_ERROR', message: 'Errore nel caricamento del file: ' + err.message },
     });
   }
 
