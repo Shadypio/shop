@@ -3,7 +3,9 @@ import { adminApi } from './api';
 import type {
   CreateCategoryPayload,
   CreateProductPayload,
+  ListOrdersFilters,
   LoginPayload,
+  OrderStatus,
   UpdateCategoryPayload,
   UpdateProductPayload,
 } from './types';
@@ -120,5 +122,49 @@ export function useRemoveProductImage() {
     mutationFn: ({ productId, imageId }: { productId: string; imageId: string }) =>
       adminApi.removeProductImage(productId, imageId),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'products'] }),
+  });
+}
+
+// --- Ordini ---
+
+export function useAdminOrders(filters: ListOrdersFilters = {}) {
+  return useQuery({
+    queryKey: ['admin', 'orders', filters],
+    queryFn: () => adminApi.getOrders(filters),
+    // Polling leggero: il negoziante vuole vedere i nuovi ordini senza dover
+    // ricaricare manualmente la pagina, ma senza bisogno di WebSocket a
+    // questa scala (vedi architettura M0).
+    refetchInterval: 15_000,
+  });
+}
+
+export function useAdminOrder(id: string) {
+  return useQuery({
+    queryKey: ['admin', 'orders', 'detail', id],
+    queryFn: () => adminApi.getOrder(id),
+    enabled: Boolean(id),
+  });
+}
+
+export function useUpdateOrderStatus() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, status }: { id: string; status: OrderStatus }) =>
+      adminApi.updateOrderStatus(id, status),
+    onSuccess: (order) => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'orders'] });
+      queryClient.setQueryData(['admin', 'orders', 'detail', order.id], order);
+      queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
+    },
+  });
+}
+
+// --- Dashboard ---
+
+export function useDashboardSummary() {
+  return useQuery({
+    queryKey: ['admin', 'dashboard', 'summary'],
+    queryFn: adminApi.getDashboardSummary,
+    refetchInterval: 30_000,
   });
 }

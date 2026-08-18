@@ -11,7 +11,9 @@ import { adminCategoryRouter } from './modules/categories/admin-category.routes.
 import { productRouter } from './modules/products/product.routes.js';
 import { adminProductRouter } from './modules/products/admin-product.routes.js';
 import { orderRouter } from './modules/orders/order.routes.js';
+import { adminOrderRouter } from './modules/orders/admin-order.routes.js';
 import { authRouter } from './modules/auth/auth.routes.js';
+import { dashboardRouter } from './modules/dashboard/dashboard.routes.js';
 
 export function createApp() {
   const app = express();
@@ -62,8 +64,8 @@ export function createApp() {
   app.use('/api/admin/auth', authRouter);
   app.use('/api/admin/categories', adminCategoryRouter);
   app.use('/api/admin/products', adminProductRouter);
-  // Le rotte ordini admin (elenco, dettaglio, cambio stato) verranno montate
-  // qui sotto /api/admin/orders in M4.
+  app.use('/api/admin/orders', adminOrderRouter);
+  app.use('/api/admin/dashboard', dashboardRouter);
 
   app.use(errorHandler);
 

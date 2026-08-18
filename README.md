@@ -60,6 +60,6 @@ packages/shared-types → tipi/DTO condivisi tra web e api (popolato quando serv
 - ✅ M0 — Setup monorepo, CI, schema Prisma iniziale, deploy skeleton
 - ✅ M1 — Catalogo pubblico (categorie, prodotti, immagini)
 - ✅ M2 — Carrello & checkout
-- ⏳ M3 — Admin: autenticazione, prodotti, categorie
-- ⏳ M4 — Admin: ordini & dashboard
+- ✅ M3 — Admin: autenticazione, prodotti, categorie
+- ✅ M4 — Admin: ordini & dashboard
 - ⏳ M5 — Hardening & lancio

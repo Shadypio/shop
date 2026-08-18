@@ -29,3 +29,26 @@ export const createOrderSchema = z
   });
 
 export type CreateOrderInput = z.infer<typeof createOrderSchema>;
+
+// --- Admin: elenco ordini con filtri/ricerca ---
+export const orderStatusEnum = z.enum([
+  'PENDING',
+  'CONFIRMED',
+  'MODIFIED',
+  'REJECTED',
+  'COMPLETED',
+]);
+
+export const listOrdersQuerySchema = z.object({
+  status: orderStatusEnum.optional(),
+  // Ricerca libera su nome, cognome o telefono del cliente.
+  search: z.string().trim().min(1).optional(),
+});
+
+export type ListOrdersQuery = z.infer<typeof listOrdersQuerySchema>;
+
+export const updateOrderStatusSchema = z.object({
+  status: orderStatusEnum,
+});
+
+export type UpdateOrderStatusInput = z.infer<typeof updateOrderStatusSchema>;

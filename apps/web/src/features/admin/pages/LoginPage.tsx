@@ -17,9 +17,9 @@ export function AdminLoginPage() {
   const location = useLocation();
 
   // Se già autenticato (es. sessione ancora valida), non mostrare di nuovo il
-  // form: torna direttamente alla pagina richiesta o alla dashboard prodotti.
+  // form: torna direttamente alla pagina richiesta o alla dashboard.
   if (currentAdmin) {
-    const redirectTo = (location.state as LocationState)?.from?.pathname ?? '/admin/prodotti';
+    const redirectTo = (location.state as LocationState)?.from?.pathname ?? '/admin/dashboard';
     return <Navigate to={redirectTo} replace />;
   }
 
@@ -29,7 +29,7 @@ export function AdminLoginPage() {
       { email, password },
       {
         onSuccess: () => {
-          const redirectTo = (location.state as LocationState)?.from?.pathname ?? '/admin/prodotti';
+          const redirectTo = (location.state as LocationState)?.from?.pathname ?? '/admin/dashboard';
           navigate(redirectTo, { replace: true });
         },
       },

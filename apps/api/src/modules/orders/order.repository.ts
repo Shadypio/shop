@@ -1,4 +1,6 @@
 import { prisma } from '../../config/prisma.js';
+import type { OrderStatus, Prisma } from '@prisma/client';
+import type { ListOrdersQuery } from './order.schema.js';
 
 interface OrderItemInput {
   productId: string;
@@ -16,6 +18,8 @@ interface CreateOrderData {
   deliveryMethod: 'DELIVERY' | 'PICKUP';
   items: OrderItemInput[];
 }
+
+const withItems = { items: true } satisfies Prisma.OrderInclude;
 
 export const orderRepository = {
   // Usato dal Service per ricalcolare i prezzi lato server prima di creare l'ordine.
@@ -46,5 +50,54 @@ export const orderRepository = {
       },
       include: { items: true },
     });
+  },
+
+  // --- Operazioni per il pannello admin ---
+
+  findAllByShop(shopId: string, filters: ListOrdersQuery) {
+    return prisma.order.findMany({
+      where: {
+        shopId,
+        ...(filters.status ? { status: filters.status } : {}),
+        ...(filters.search
+          ? {
+              OR: [
+                { customerName: { contains: filters.search, mode: 'insensitive' as const } },
+                { customerSurname: { contains: filters.search, mode: 'insensitive' as const } },
+                { phone: { contains: filters.search, mode: 'insensitive' as const } },
+              ],
+            }
+          : {}),
+      },
+      orderBy: { createdAt: 'desc' },
+      include: withItems,
+      // Limite di sicurezza: sufficiente per il volume di un piccolo negozio;
+      // evita query illimitate quando lo storico ordini crescerà nel tempo.
+      take: 200,
+    });
+  },
+
+  findById(shopId: string, id: string) {
+    return prisma.order.findFirst({ where: { id, shopId }, include: withItems });
+  },
+
+  updateStatus(id: string, status: OrderStatus) {
+    return prisma.order.update({
+      where: { id },
+      data: { status },
+      include: withItems,
+    });
+  },
+
+  countByShop(shopId: string) {
+    return prisma.order.count({ where: { shopId } });
+  },
+
+  countByShopAndStatus(shopId: string, status: OrderStatus) {
+    return prisma.order.count({ where: { shopId, status } });
+  },
+
+  countCreatedSince(shopId: string, since: Date) {
+    return prisma.order.count({ where: { shopId, createdAt: { gte: since } } });
   },
 };

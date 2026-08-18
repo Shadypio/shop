@@ -1,11 +1,16 @@
 import { apiClient } from '../../lib/api-client';
 import type {
   AdminCategory,
+  AdminOrderDetail,
+  AdminOrderListItem,
   AdminProduct,
   AdminUser,
   CreateCategoryPayload,
   CreateProductPayload,
+  DashboardSummary,
+  ListOrdersFilters,
   LoginPayload,
+  OrderStatus,
   UpdateCategoryPayload,
   UpdateProductPayload,
 } from './types';
@@ -39,4 +44,19 @@ export const adminApi = {
   },
   removeProductImage: (productId: string, imageId: string) =>
     apiClient.delete<AdminProduct>(`/admin/products/${productId}/images/${imageId}`),
+
+  // --- Ordini ---
+  getOrders: (filters: ListOrdersFilters = {}) => {
+    const query = new URLSearchParams();
+    if (filters.status) query.set('status', filters.status);
+    if (filters.search) query.set('search', filters.search);
+    const qs = query.toString();
+    return apiClient.get<AdminOrderListItem[]>(`/admin/orders${qs ? `?${qs}` : ''}`);
+  },
+  getOrder: (id: string) => apiClient.get<AdminOrderDetail>(`/admin/orders/${id}`),
+  updateOrderStatus: (id: string, status: OrderStatus) =>
+    apiClient.patch<AdminOrderDetail>(`/admin/orders/${id}/status`, { status }),
+
+  // --- Dashboard ---
+  getDashboardSummary: () => apiClient.get<DashboardSummary>('/admin/dashboard/summary'),
 };

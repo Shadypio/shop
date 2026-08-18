@@ -11,6 +11,9 @@ import { ProtectedRoute } from '../features/admin/components/ProtectedRoute';
 import { AdminLayout } from '../features/admin/components/AdminLayout';
 import { CategoriesPage } from '../features/admin/pages/CategoriesPage';
 import { ProductsPage } from '../features/admin/pages/ProductsPage';
+import { DashboardPage } from '../features/admin/pages/DashboardPage';
+import { OrdersPage } from '../features/admin/pages/OrdersPage';
+import { OrderDetailPage } from '../features/admin/pages/OrderDetailPage';
 
 export const router = createBrowserRouter([
   {
@@ -33,7 +36,10 @@ export const router = createBrowserRouter([
       {
         element: <AdminLayout />,
         children: [
-          { index: true, element: <Navigate to="/admin/prodotti" replace /> },
+          { index: true, element: <Navigate to="/admin/dashboard" replace /> },
+          { path: 'dashboard', element: <DashboardPage /> },
+          { path: 'ordini', element: <OrdersPage /> },
+          { path: 'ordini/:id', element: <OrderDetailPage /> },
           { path: 'prodotti', element: <ProductsPage /> },
           { path: 'categorie', element: <CategoriesPage /> },
         ],

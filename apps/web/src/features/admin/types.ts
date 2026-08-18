@@ -45,3 +45,55 @@ export interface CreateProductPayload {
 }
 
 export type UpdateProductPayload = Partial<CreateProductPayload>;
+
+// --- Ordini ---
+export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'MODIFIED' | 'REJECTED' | 'COMPLETED';
+export type OrderDeliveryMethod = 'DELIVERY' | 'PICKUP';
+
+export interface AdminOrderListItem {
+  id: string;
+  customerName: string;
+  customerSurname: string;
+  phone: string;
+  deliveryMethod: OrderDeliveryMethod;
+  status: OrderStatus;
+  total: number;
+  createdAt: string;
+}
+
+export interface AdminOrderItem {
+  id: string;
+  productId: string;
+  productName: string;
+  unitPrice: number;
+  quantity: number;
+}
+
+export interface AdminOrderDetail {
+  id: string;
+  customerName: string;
+  customerSurname: string;
+  phone: string;
+  address: string | null;
+  notes: string | null;
+  deliveryMethod: OrderDeliveryMethod;
+  status: OrderStatus;
+  total: number;
+  items: AdminOrderItem[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ListOrdersFilters {
+  status?: OrderStatus;
+  search?: string;
+}
+
+// --- Dashboard ---
+export interface DashboardSummary {
+  totalOrders: number;
+  pendingOrders: number;
+  completedOrders: number;
+  todayOrders: number;
+}
+
