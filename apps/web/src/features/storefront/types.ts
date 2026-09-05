@@ -25,7 +25,7 @@ export interface ProductDetail {
   images: string[];
 }
 
-export type DeliveryMethod = 'DELIVERY' | 'PICKUP';
+export type DeliveryMethod = 'DELIVERY' | 'PICKUP' | 'DELIVERY_OUT_OF_REGION';
 
 export interface CreateOrderPayload {
   customerName: string;

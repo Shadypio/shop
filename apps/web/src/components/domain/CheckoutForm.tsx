@@ -48,6 +48,12 @@ const deliveryOptions: Array<{
     description: 'Comodo quando esci',
     icon: <StorefrontOutlinedIcon />,
   },
+  {
+    value: 'DELIVERY_OUT_OF_REGION',
+    label: 'Consegna fuori regione?',
+    description: 'Contattaci telefonicamente al +39 366 74 89 675',
+    icon: <StorefrontOutlinedIcon />,
+  },
 ];
 
 function FormSection({ title, children }: { title: string; children: React.ReactNode }) {
