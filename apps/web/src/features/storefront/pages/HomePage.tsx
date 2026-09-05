@@ -64,7 +64,10 @@ export function HomePage() {
           onChange={setQuery}
           onSubmit={handleSearchSubmit}
           placeholder="Cosa stai cercando oggi?"
-          sx={{ maxWidth: 420, '& .MuiOutlinedInput-root': { bgcolor: '#fff' } }}
+          sx={{
+            maxWidth: 420,
+            '& .MuiOutlinedInput-root': { bgcolor: '#fff', color: theme.palette.secondary.main },
+          }}
         />
       </Box>
 
