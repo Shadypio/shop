@@ -2,11 +2,11 @@
 # un progetto Node/pnpm senza bisogno di configurazione dichiarativa).
 services:
   - type: web
-    name: shop-api
+    name: aeffehomecosmetic-api
     runtime: node
     rootDir: apps/api
-    buildCommand: "corepack enable && pnpm install --frozen-lockfile && pnpm prisma:generate && pnpm build"
-    startCommand: "pnpm start"
+    buildCommand: 'corepack enable && pnpm install --frozen-lockfile && pnpm prisma:generate && pnpm build'
+    startCommand: 'pnpm start'
     envVars:
       - key: NODE_ENV
         value: production
@@ -18,5 +18,5 @@ services:
         sync: false
 
 databases:
-  - name: shop-db
+  - name: aeffehomecosmetic-db
     plan: free
