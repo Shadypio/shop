@@ -13,6 +13,7 @@ export function ProductPage() {
   const addItem = useCartStore((state) => state.addItem);
   const [quantity, setQuantity] = useState(1);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [mainImage, setMainImage] = useState<string | undefined>(undefined);
 
   if (isLoading) {
     return (
@@ -61,23 +62,51 @@ export function ProductPage() {
       </Typography>
 
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 5 }}>
-        <Box
-          sx={{
-            width: { xs: '100%', sm: 380 },
-            flexShrink: 0,
-            aspectRatio: '1 / 1',
-            borderRadius: 4,
-            overflow: 'hidden',
-            bgcolor: 'grey.100',
-            boxShadow: 3,
-            backgroundImage: product.images[0] ? `url(${product.images[0]})` : undefined,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-          role="img"
-          aria-label={product.name}
-        />
-
+        <div className="flex-col">
+          <Box
+            sx={{
+              width: { xs: '100%', sm: 380 },
+              flexShrink: 0,
+              aspectRatio: '1 / 1',
+              borderRadius: 4,
+              overflow: 'hidden',
+              bgcolor: 'grey.100',
+              boxShadow: 3,
+              backgroundImage: mainImage
+                ? `url(${mainImage})`
+                : product.images[0]
+                  ? `url(${product.images[0]})`
+                  : undefined,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+            role="img"
+            aria-label={product.name}
+          />
+          {product.images.length > 1 && (
+            <div className="flex flex-row items-center gap-2 mt-4 w-full overflow-x-auto scrollbar-none sm:scrollbar-auto">
+              {product.images.map((image, index) => (
+                <Box
+                  key={index}
+                  onClick={() => setMainImage(image)}
+                  sx={{
+                    width: '20%',
+                    flexShrink: 0,
+                    borderRadius: 1,
+                    aspectRatio: '1 / 1',
+                    bgcolor: 'grey.100',
+                    boxShadow: 3,
+                    backgroundImage: image ? `url(${image})` : undefined,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                  }}
+                  role="img"
+                  aria-label={product.name}
+                />
+              ))}
+            </div>
+          )}
+        </div>
         <Stack spacing={2.5} sx={{ flexGrow: 1, minWidth: 0 }}>
           <Box>
             <Typography variant="h5" fontWeight={600} sx={{ mb: 0.75 }}>
