@@ -43,11 +43,6 @@ export function CheckoutPage() {
         items: items.map((item) => ({ productId: item.productId, quantity: item.quantity })),
       }),
     onSuccess: (order) => {
-      // Il carrello NON viene svuotato qui, ma al mount di
-      // OrderConfirmationPage: farlo qui creerebbe una finestra in cui
-      // questo stesso componente si re-renderizza con items=[] mentre è
-      // ancora montato, facendo scattare la guardia sotto e rimandando
-      // l'utente a /carrello invece che alla conferma (race condition).
       navigate('/ordine-confermato', { state: { order } });
     },
   });

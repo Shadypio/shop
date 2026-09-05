@@ -21,13 +21,12 @@ export function HomePage() {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
 
-  const { data: categories, isLoading: isCategoriesLoading, isError: isCategoriesError } =
-    useCategories();
   const {
-    data: products,
-    isLoading: isProductsLoading,
-    isError: isProductsError,
-  } = useProducts();
+    data: categories,
+    isLoading: isCategoriesLoading,
+    isError: isCategoriesError,
+  } = useCategories();
+  const { data: products, isLoading: isProductsLoading, isError: isProductsError } = useProducts();
 
   function handleSearchSubmit() {
     navigate(query ? `/cerca?q=${encodeURIComponent(query)}` : '/cerca');
@@ -39,7 +38,7 @@ export function HomePage() {
           negozio giusto" — non una lista puntata di funzionalità. */}
       <Box
         sx={{
-          borderRadius: 5,
+          borderRadius: 2,
           px: { xs: 3, sm: 6 },
           py: { xs: 4, sm: 6 },
           mb: { xs: 3, sm: 4 },
@@ -121,7 +120,10 @@ export function HomePage() {
       ) : isProductsError ? (
         <Alert severity="error">Impossibile caricare i prodotti. Riprova più tardi.</Alert>
       ) : (
-        <ProductGrid products={products ?? []} emptyMessage="Nessun prodotto disponibile al momento." />
+        <ProductGrid
+          products={products ?? []}
+          emptyMessage="Nessun prodotto disponibile al momento."
+        />
       )}
     </Box>
   );

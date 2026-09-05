@@ -62,15 +62,12 @@ export function createShopTheme(config: ShopThemeConfig): Theme {
     shop: config.branding,
     palette: {
       mode: 'light',
-      primary: { main: primary },
+      primary: { main: primary, contrastText: '#FFFFFF' },
       secondary: { main: secondary },
-      // Crema caldo invece del solito grigio/bianco freddo dei marketplace:
-      // dà subito un'impressione di bottega locale piuttosto che di piattaforma.
-      background: { default: '#FBF6F0', paper: '#FFFFFF' },
+      background: { default: '#f0f9fb', paper: '#FFFFFF' },
       text: {
         // Marrone-antracite invece di nero puro: più morbido e leggibile,
-        // coerente con la palette calda.
-        primary: '#2E241C',
+        primary: '#2E241C4',
         secondary: '#6B5D50',
       },
       divider: '#EBE0D4',

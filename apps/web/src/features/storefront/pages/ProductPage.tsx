@@ -90,6 +90,7 @@ export function ProductPage() {
                   key={index}
                   onClick={() => setMainImage(image)}
                   sx={{
+                    cursor: 'pointer',
                     width: '20%',
                     flexShrink: 0,
                     borderRadius: 1,

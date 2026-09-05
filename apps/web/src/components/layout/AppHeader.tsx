@@ -33,7 +33,7 @@ export function AppHeader({ onCartClick }: AppHeaderProps) {
       sx={{
         borderBottom: 1,
         borderColor: 'divider',
-        bgcolor: 'rgba(251, 246, 240, 0.92)',
+        bgcolor: 'rgba(245, 230, 250, 0.92)',
         backdropFilter: 'blur(8px)',
       }}
     >

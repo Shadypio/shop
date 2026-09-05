@@ -10,10 +10,7 @@ export const aeffehomeTheme: ShopThemeConfig = {
     tagline: 'Il tuo negozio di fiducia, sotto casa',
   },
   palette: {
-    // Terracotta calda: evoca l'artigianalità di una bottega di quartiere.
-    primary: '#C1440E',
-    // Verde salvia: complementare naturale, richiama pulizia/freschezza
-    // senza scadere nel verde "eco" da grande marketplace.
-    secondary: '#3F7D5C',
+    primary: '#0ea3c1',
+    secondary: '#3f7d78',
   },
 };

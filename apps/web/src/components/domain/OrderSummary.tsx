@@ -22,7 +22,12 @@ interface OrderSummaryProps {
   onRemove?: (productId: string) => void;
 }
 
-export function OrderSummary({ items, editable = false, onQuantityChange, onRemove }: OrderSummaryProps) {
+export function OrderSummary({
+  items,
+  editable = false,
+  onQuantityChange,
+  onRemove,
+}: OrderSummaryProps) {
   const total = items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
 
   return (
@@ -87,7 +92,14 @@ export function OrderSummary({ items, editable = false, onQuantityChange, onRemo
         direction="row"
         justifyContent="space-between"
         alignItems="center"
-        sx={{ bgcolor: 'grey.50', borderRadius: 3, px: 2, py: 1.5 }}
+        sx={{
+          bgcolor: 'grey.50',
+          borderRadius: 3,
+          px: 2,
+          py: 1.5,
+          border: '1px solid',
+          borderColor: 'divider',
+        }}
       >
         <Typography variant="subtitle1" fontWeight={700}>
           Totale

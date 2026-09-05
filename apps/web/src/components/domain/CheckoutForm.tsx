@@ -38,7 +38,7 @@ const deliveryOptions: Array<{
 }> = [
   {
     value: 'DELIVERY',
-    label: 'Consegna a domicilio',
+    label: 'Consegna a domicilio (solo per comune di Gragnano e limitrofi)',
     description: 'Te lo portiamo noi a casa',
     icon: <LocalShippingOutlinedIcon />,
   },
@@ -71,11 +71,17 @@ export function CheckoutForm({
   errorMessage,
 }: CheckoutFormProps) {
   return (
-    <Box component="form" onSubmit={onSubmit} noValidate sx={{ display: 'flex', flexDirection: 'column', gap: 3.5 }}>
+    <Box
+      component="form"
+      onSubmit={onSubmit}
+      noValidate
+      sx={{ display: 'flex', flexDirection: 'column', gap: 3.5 }}
+    >
       <FormSection title="I tuoi dati">
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
           <TextField
             label="Nome"
+            sx={{ backgroundColor: 'background.paper', borderRadius: 1 }}
             required
             fullWidth
             value={values.customerName}
@@ -83,6 +89,7 @@ export function CheckoutForm({
           />
           <TextField
             label="Cognome"
+            sx={{ backgroundColor: 'background.paper', borderRadius: 1 }}
             required
             fullWidth
             value={values.customerSurname}
@@ -94,6 +101,7 @@ export function CheckoutForm({
           required
           type="tel"
           fullWidth
+          sx={{ backgroundColor: 'background.paper', borderRadius: 1 }}
           value={values.phone}
           onChange={(e) => onChange('phone', e.target.value)}
         />
@@ -111,12 +119,20 @@ export function CheckoutForm({
                   flex: 1,
                   borderColor: selected ? 'primary.main' : 'divider',
                   borderWidth: selected ? 2 : 1,
-                  bgcolor: selected ? (theme) => alpha(theme.palette.primary.main, 0.08) : 'background.paper',
+                  bgcolor: selected
+                    ? (theme) => alpha(theme.palette.primary.main, 0.08)
+                    : 'background.paper',
                 }}
               >
                 <CardActionArea
                   onClick={() => onChange('deliveryMethod', option.value)}
-                  sx={{ p: 2, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 1 }}
+                  sx={{
+                    p: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    gap: 1,
+                  }}
                 >
                   <Box sx={{ color: selected ? 'primary.main' : 'text.secondary' }}>
                     {option.icon}
@@ -139,6 +155,7 @@ export function CheckoutForm({
           <TextField
             label="Indirizzo"
             required
+            sx={{ backgroundColor: 'background.paper', borderRadius: 1 }}
             fullWidth
             value={values.address}
             onChange={(e) => onChange('address', e.target.value)}
@@ -151,6 +168,7 @@ export function CheckoutForm({
           placeholder="Es. citofono, orario preferito, richieste particolari…"
           fullWidth
           multiline
+          sx={{ backgroundColor: 'background.paper', borderRadius: 1 }}
           minRows={2}
           value={values.notes}
           onChange={(e) => onChange('notes', e.target.value)}
