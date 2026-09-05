@@ -20,9 +20,9 @@ export function ProductGrid({
   }
 
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={{ xs: 1.5, sm: 2.5 }}>
       {products.map((product) => (
-        <Grid key={product.id} size={{ xs: 6, sm: 4 }}>
+        <Grid key={product.id} size={{ xs: 6, sm: 4, md: 3 }}>
           <ProductCard product={product} />
         </Grid>
       ))}

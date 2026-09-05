@@ -12,7 +12,7 @@ async function main() {
   const shop = await prisma.shop.upsert({
     where: { slug: 'shop-detersivi' },
     update: {},
-    create: { name: 'Detersivi Rossi', slug: 'shop-detersivi' },
+    create: { name: 'AEFFE Home&Cosmetic', slug: 'shop-detersivi' },
   });
 
   const categories = await Promise.all(
@@ -123,7 +123,9 @@ async function main() {
     }
   }
 
-  console.log(`Seed completato: shop "${shop.name}", ${categories.length} categorie, ${products.length} prodotti.`);
+  console.log(
+    `Seed completato: shop "${shop.name}", ${categories.length} categorie, ${products.length} prodotti.`,
+  );
 }
 
 main()

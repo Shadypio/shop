@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link as RouterLink, Navigate, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { Box, Button, Stack, Typography } from '@mui/material';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import { useCartStore } from '../../../store/cart-store';
 import { storefrontApi } from '../api';
 import { ApiError } from '../../../lib/api-client';
@@ -20,7 +20,6 @@ const initialValues: CheckoutFormValues = {
 
 export function CheckoutPage() {
   const items = useCartStore((state) => state.items);
-  const clearCart = useCartStore((state) => state.clear);
   const navigate = useNavigate();
 
   const [values, setValues] = useState<CheckoutFormValues>(initialValues);
@@ -44,7 +43,11 @@ export function CheckoutPage() {
         items: items.map((item) => ({ productId: item.productId, quantity: item.quantity })),
       }),
     onSuccess: (order) => {
-      clearCart();
+      // Il carrello NON viene svuotato qui, ma al mount di
+      // OrderConfirmationPage: farlo qui creerebbe una finestra in cui
+      // questo stesso componente si re-renderizza con items=[] mentre è
+      // ancora montato, facendo scattare la guardia sotto e rimandando
+      // l'utente a /carrello invece che alla conferma (race condition).
       navigate('/ordine-confermato', { state: { order } });
     },
   });
@@ -64,13 +67,13 @@ export function CheckoutPage() {
       <Button
         component={RouterLink}
         to="/carrello"
-        startIcon={<ArrowBackIosNewIcon fontSize="small" />}
-        sx={{ mb: 1 }}
+        startIcon={<ArrowBackRoundedIcon fontSize="small" />}
+        sx={{ mb: 1.5, ml: -1 }}
       >
         Torna al carrello
       </Button>
       <Typography variant="h5" fontWeight={700} sx={{ mb: 3 }}>
-        Checkout
+        Completa il tuo ordine
       </Typography>
 
       <Stack spacing={4}>

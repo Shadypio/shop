@@ -24,7 +24,8 @@ export function QuantityStepper({
       sx={{
         border: 1,
         borderColor: 'divider',
-        borderRadius: 2,
+        borderRadius: 999,
+        bgcolor: 'background.paper',
         width: 'fit-content',
       }}
     >
@@ -33,10 +34,15 @@ export function QuantityStepper({
         onClick={() => onChange(Math.max(min, value - 1))}
         disabled={value <= min}
         aria-label="Diminuisci quantità"
+        sx={{ color: 'text.primary' }}
       >
         <RemoveIcon fontSize="small" />
       </IconButton>
-      <Typography variant="body2" fontWeight={600} sx={{ minWidth: 24, textAlign: 'center' }}>
+      <Typography
+        variant="body2"
+        fontWeight={700}
+        sx={{ minWidth: 22, textAlign: 'center', userSelect: 'none' }}
+      >
         {value}
       </Typography>
       <IconButton
@@ -44,6 +50,7 @@ export function QuantityStepper({
         onClick={() => onChange(Math.min(max, value + 1))}
         disabled={value >= max}
         aria-label="Aumenta quantità"
+        sx={{ color: 'primary.main' }}
       >
         <AddIcon fontSize="small" />
       </IconButton>

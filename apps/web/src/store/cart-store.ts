@@ -6,6 +6,10 @@ export interface CartItem {
   name: string;
   unitPrice: number;
   quantity: number;
+  // Facoltativo: usato solo per mostrare la miniatura del prodotto nel
+  // carrello/checkout. Additivo e retrocompatibile con i carrelli già
+  // salvati in localStorage prima di questo campo.
+  image?: string | null;
 }
 
 interface CartState {
