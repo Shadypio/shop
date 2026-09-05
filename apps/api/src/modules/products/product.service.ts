@@ -1,16 +1,41 @@
-import { Prisma } from '@prisma/client';
 import { productRepository } from './product.repository.js';
 import { categoryRepository } from '../categories/category.repository.js';
 import { AppError, NotFoundError } from '../../middlewares/app-error.js';
 import { slugify } from '../../lib/slugify.js';
-import type { ListProductsQuery, CreateProductInput, UpdateProductInput } from './product.schema.js';
+import type {
+  ListProductsQuery,
+  CreateProductInput,
+  UpdateProductInput,
+} from './product.schema.js';
 
-type ProductWithRelations = Prisma.ProductGetPayload<{
-  include: {
-    category: { select: { id: true; name: true; slug: true } };
-    images: true;
-  };
-}>;
+// Forma esplicita del prodotto con le relazioni usate da questo modulo,
+// definita localmente invece che tramite `Prisma.ProductGetPayload<...>`:
+// in alcuni ambienti di build il client Prisma generato non espone questo
+// helper type (o l'intero namespace `Prisma`), quindi affidarsi a un tipo
+// concreto scritto a mano rende il file compilabile indipendentemente da
+// come/dove viene generato il client, senza cambiare nulla a runtime.
+interface ProductCategorySnapshot {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+interface ProductImageSnapshot {
+  id: string;
+  url: string;
+  position: number;
+}
+
+interface ProductWithRelations {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  price: unknown; // Prisma.Decimal a runtime: va sempre convertito con Number(...)
+  available: boolean;
+  category: ProductCategorySnapshot;
+  images: ProductImageSnapshot[];
+}
 
 function toListDto(product: ProductWithRelations) {
   return {
@@ -74,7 +99,7 @@ async function assertCategoryExists(shopId: string, categoryId: string) {
 export const productService = {
   async listProducts(shopId: string, filters: ListProductsQuery) {
     const products = await productRepository.findAvailableByShop(shopId, filters);
-    return products.map(toListDto);
+    return (products as ProductWithRelations[]).map(toListDto);
   },
 
   async getProductBySlug(shopId: string, slug: string) {
@@ -82,14 +107,14 @@ export const productService = {
     if (!product) {
       throw new NotFoundError('Prodotto non trovato');
     }
-    return toDetailDto(product);
+    return toDetailDto(product as ProductWithRelations);
   },
 
   // --- Operazioni per il pannello admin ---
 
   async listAllForAdmin(shopId: string) {
     const products = await productRepository.findAllByShop(shopId);
-    return products.map(toAdminDetailDto);
+    return (products as ProductWithRelations[]).map(toAdminDetailDto);
   },
 
   async getByIdForAdmin(shopId: string, id: string) {
@@ -97,7 +122,7 @@ export const productService = {
     if (!product) {
       throw new NotFoundError('Prodotto non trovato');
     }
-    return toAdminDetailDto(product);
+    return toAdminDetailDto(product as ProductWithRelations);
   },
 
   async createProduct(shopId: string, input: CreateProductInput) {
@@ -111,7 +136,7 @@ export const productService = {
       categoryId: input.categoryId,
       available: input.available,
     });
-    return toAdminDetailDto(product);
+    return toAdminDetailDto(product as ProductWithRelations);
   },
 
   async updateProduct(shopId: string, id: string, input: UpdateProductInput) {
@@ -127,7 +152,7 @@ export const productService = {
       ...input,
       ...(slug ? { slug } : {}),
     });
-    return toAdminDetailDto(product);
+    return toAdminDetailDto(product as ProductWithRelations);
   },
 
   async deleteProduct(shopId: string, id: string) {

@@ -1,7 +1,6 @@
 import { orderRepository } from './order.repository.js';
 import { AppError, NotFoundError } from '../../middlewares/app-error.js';
-import type { CreateOrderInput, ListOrdersQuery } from './order.schema.js';
-import type { OrderStatus } from '@prisma/client';
+import type { CreateOrderInput, ListOrdersQuery, OrderStatus } from './order.schema.js';
 
 // Macchina a stati minimale per le transizioni di stato ordine.
 // Regola: PENDING/CONFIRMED/MODIFIED sono stati "vivi" e possono muoversi
@@ -22,7 +21,11 @@ function assertValidTransition(from: OrderStatus, to: OrderStatus) {
   }
 }
 
-function toListDto(order: {
+// Forme esplicite dei dati ordine attesi da Prisma, definite qui invece che
+// derivate da un type Prisma generato: restano valide anche se in un
+// ambiente di build il client Prisma risultasse tipizzato in modo incompleto
+// (vedi stesso pattern in product.service.ts).
+interface OrderListSource {
   id: string;
   customerName: string;
   customerSurname: string;
@@ -31,24 +34,9 @@ function toListDto(order: {
   status: string;
   createdAt: Date;
   items: { unitPrice: unknown; quantity: number }[];
-}) {
-  const total = order.items.reduce(
-    (sum, item) => sum + Number(item.unitPrice) * item.quantity,
-    0,
-  );
-  return {
-    id: order.id,
-    customerName: order.customerName,
-    customerSurname: order.customerSurname,
-    phone: order.phone,
-    deliveryMethod: order.deliveryMethod,
-    status: order.status,
-    total,
-    createdAt: order.createdAt,
-  };
 }
 
-function toDetailDto(order: {
+interface OrderDetailSource {
   id: string;
   customerName: string;
   customerSurname: string;
@@ -66,7 +54,26 @@ function toDetailDto(order: {
     unitPrice: unknown;
     quantity: number;
   }[];
-}) {
+}
+
+function toListDto(order: OrderListSource) {
+  const total = order.items.reduce(
+    (sum, item) => sum + Number(item.unitPrice) * item.quantity,
+    0,
+  );
+  return {
+    id: order.id,
+    customerName: order.customerName,
+    customerSurname: order.customerSurname,
+    phone: order.phone,
+    deliveryMethod: order.deliveryMethod,
+    status: order.status,
+    total,
+    createdAt: order.createdAt,
+  };
+}
+
+function toDetailDto(order: OrderDetailSource) {
   const items = order.items.map((item) => ({
     id: item.id,
     productId: item.productId,
@@ -118,7 +125,7 @@ export const orderService = {
       };
     });
 
-    const order = await orderRepository.createOrder(shopId, {
+    const order = (await orderRepository.createOrder(shopId, {
       customerName: input.customerName,
       customerSurname: input.customerSurname,
       phone: input.phone,
@@ -126,7 +133,7 @@ export const orderService = {
       notes: input.notes,
       deliveryMethod: input.deliveryMethod,
       items,
-    });
+    })) as { id: string; status: string; createdAt: Date };
 
     const total = items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
 
@@ -142,7 +149,7 @@ export const orderService = {
 
   async listOrdersForAdmin(shopId: string, filters: ListOrdersQuery) {
     const orders = await orderRepository.findAllByShop(shopId, filters);
-    return orders.map(toListDto);
+    return (orders as OrderListSource[]).map(toListDto);
   },
 
   async getOrderByIdForAdmin(shopId: string, id: string) {
@@ -150,7 +157,7 @@ export const orderService = {
     if (!order) {
       throw new NotFoundError('Ordine non trovato');
     }
-    return toDetailDto(order);
+    return toDetailDto(order as OrderDetailSource);
   },
 
   async updateOrderStatus(shopId: string, id: string, nextStatus: OrderStatus) {
@@ -158,9 +165,9 @@ export const orderService = {
     if (!order) {
       throw new NotFoundError('Ordine non trovato');
     }
-    assertValidTransition(order.status, nextStatus);
+    assertValidTransition((order as OrderDetailSource).status as OrderStatus, nextStatus);
     const updated = await orderRepository.updateStatus(id, nextStatus);
-    return toDetailDto(updated);
+    return toDetailDto(updated as OrderDetailSource);
   },
 
   async getDashboardSummary(shopId: string) {

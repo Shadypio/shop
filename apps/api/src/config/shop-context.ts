@@ -12,6 +12,11 @@ export async function getCurrentShopId(): Promise<string> {
     return cachedShopId;
   }
   const shop = await prisma.shop.findUniqueOrThrow({ where: { slug: env.SHOP_SLUG } });
-  cachedShopId = shop.id;
-  return cachedShopId;
+  // Si assegna prima a una costante locale e si restituisce quella: il
+  // narrowing di TypeScript su una variabile di modulo mutabile (`let`) non
+  // è sempre garantito attraverso un'assegnazione, quindi rileggere
+  // `cachedShopId` subito dopo può ancora risultare "string | null".
+  const shopId = shop.id;
+  cachedShopId = shopId;
+  return shopId;
 }

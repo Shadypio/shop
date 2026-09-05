@@ -39,6 +39,12 @@ export const orderStatusEnum = z.enum([
   'COMPLETED',
 ]);
 
+// Derivato da zod invece che da Prisma: rimane indipendente dai tipi generati
+// dal client Prisma (es. `import type { OrderStatus } from '@prisma/client'`),
+// la cui generazione in alcuni ambienti di build può risultare incompleta.
+// A runtime i valori coincidono comunque con l'enum OrderStatus dello schema.
+export type OrderStatus = z.infer<typeof orderStatusEnum>;
+
 export const listOrdersQuerySchema = z.object({
   status: orderStatusEnum.optional(),
   // Ricerca libera su nome, cognome o telefono del cliente.

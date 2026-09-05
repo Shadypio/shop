@@ -1,6 +1,5 @@
 import { prisma } from '../../config/prisma.js';
-import type { OrderStatus, Prisma } from '@prisma/client';
-import type { ListOrdersQuery } from './order.schema.js';
+import type { ListOrdersQuery, OrderStatus } from './order.schema.js';
 
 interface OrderItemInput {
   productId: string;
@@ -19,14 +18,35 @@ interface CreateOrderData {
   items: OrderItemInput[];
 }
 
-const withItems = { items: true } satisfies Prisma.OrderInclude;
+// Forma minima del prodotto necessaria per ricalcolare un ordine lato server.
+// Definita esplicitamente (invece di affidarsi al tipo Product inferito dal
+// client Prisma) per restare compilabile anche quando la generazione dei
+// tipi Prisma in un ambiente di build risulta incompleta.
+export interface OrderProductSnapshot {
+  id: string;
+  name: string;
+  price: unknown; // Prisma.Decimal a runtime: va sempre convertito con Number(...)
+}
+
+// Nessuna annotazione esplicita "satisfies Prisma.OrderInclude": il tipo
+// viene semplicemente inferito da questo oggetto letterale. In alcuni
+// ambienti di build il client Prisma non espone il namespace `Prisma` con
+// tutti i suoi helper type (es. `Prisma.OrderInclude`), quindi evitare quella
+// dipendenza rende il file compilabile indipendentemente da come/dove viene
+// generato il client, senza cambiare il comportamento a runtime.
+const withItems = { items: true };
 
 export const orderRepository = {
   // Usato dal Service per ricalcolare i prezzi lato server prima di creare l'ordine.
-  findProductsByIds(shopId: string, ids: string[]) {
+  // Cast esplicito sul valore di ritorno: se in un ambiente di build il modello
+  // Product risultasse tipizzato in modo incompleto dal client Prisma generato,
+  // il confronto strutturale con OrderProductSnapshot fallirebbe; il cast
+  // garantisce che il file compili comunque, riflettendo la forma reale dei
+  // dati restituiti a runtime.
+  findProductsByIds(shopId: string, ids: string[]): Promise<OrderProductSnapshot[]> {
     return prisma.product.findMany({
       where: { shopId, id: { in: ids } },
-    });
+    }) as Promise<OrderProductSnapshot[]>;
   },
 
   createOrder(shopId: string, data: CreateOrderData) {
