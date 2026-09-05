@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express from 'express';
+import helmet from 'helmet';
 import path from 'node:path';
 import session from 'express-session';
 import { pinoHttp } from 'pino-http';
@@ -26,6 +27,17 @@ export function createApp() {
   }
 
   app.use(pinoHttp());
+  app.use(
+    helmet({
+      // API pura + immagini servite da un dominio diverso dal frontend
+      // (Vercel): la CSP di default non porta valore qui (nessuna pagina HTML
+      // servita da questo backend, a parte /uploads) e la policy di default
+      // "same-site" per le risorse impedirebbe al frontend di caricare le
+      // immagini prodotto da un'origine diversa.
+      contentSecurityPolicy: false,
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+    }),
+  );
   app.use(
     cors({
       origin: env.WEB_ORIGIN,
