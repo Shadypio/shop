@@ -1,7 +1,7 @@
 import { RouterProvider } from 'react-router-dom';
 import { AppProviders } from './app/providers';
 import { router } from './app/router';
-import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
       <AppProviders>
         <RouterProvider router={router} />
       </AppProviders>
-      <Analytics />
+      <SpeedInsights />
     </>
   );
 }
