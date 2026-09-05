@@ -15,6 +15,9 @@ const envSchema = z.object({
   // Slug dello shop attivo. Nell'MVP esiste un solo shop; questo campo prepara
   // il terreno per il multi-tenant futuro senza introdurne la complessità ora.
   SHOP_SLUG: z.string().min(1).default('shop-detersivi'),
+  CLOUDINARY_CLOUD_NAME: z.string().optional(),
+  CLOUDINARY_API_KEY: z.string().optional(),
+  CLOUDINARY_API_SECRET: z.string().optional(),
 });
 
 export const env = envSchema.parse(process.env);
