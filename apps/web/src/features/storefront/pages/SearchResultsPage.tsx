@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Alert, Box, CircularProgress, Stack, Typography } from '@mui/material';
 import { useProducts } from '../queries';
-import { ProductGrid } from '../../../components/domain/ProductGrid';
+import { PagedProductGrid } from '../../../components/domain/PagedProductGrid';
 import { SearchBar } from '../../../components/domain/SearchBar';
 
 export function SearchResultsPage() {
@@ -46,9 +46,10 @@ export function SearchResultsPage() {
           Scrivi qualcosa per cercare tra i prodotti del negozio.
         </Typography>
       ) : (
-        <ProductGrid
+        <PagedProductGrid
           products={products ?? []}
           emptyMessage={`Nessun prodotto trovato per "${query}".`}
+          resetKey={query}
         />
       )}
     </Box>

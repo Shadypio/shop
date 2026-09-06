@@ -3,7 +3,7 @@ import { Alert, Box, CircularProgress, Stack, Typography } from '@mui/material';
 import { alpha, useTheme } from '@mui/material/styles';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import { useCategory, useProducts } from '../queries';
-import { ProductGrid } from '../../../components/domain/ProductGrid';
+import { PagedProductGrid } from '../../../components/domain/PagedProductGrid';
 import { getCategoryIcon } from '../category-icons';
 
 export function CategoryPage() {
@@ -78,9 +78,10 @@ export function CategoryPage() {
       ) : isError ? (
         <Alert severity="error">Impossibile caricare i prodotti. Riprova più tardi.</Alert>
       ) : (
-        <ProductGrid
+        <PagedProductGrid
           products={products ?? []}
           emptyMessage="Nessun prodotto disponibile in questa categoria."
+          resetKey={slug}
         />
       )}
     </Box>

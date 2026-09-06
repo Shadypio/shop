@@ -7,7 +7,7 @@ import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import PaymentsOutlinedIcon from '@mui/icons-material/PaymentsOutlined';
 import { useCategories, useProducts } from '../queries';
 import { CategoryRail } from '../../../components/domain/CategoryRail';
-import { ProductGrid } from '../../../components/domain/ProductGrid';
+import { PagedProductGrid } from '../../../components/domain/PagedProductGrid';
 import { SearchBar } from '../../../components/domain/SearchBar';
 
 const trustHighlights = [
@@ -123,7 +123,7 @@ export function HomePage() {
       ) : isProductsError ? (
         <Alert severity="error">Impossibile caricare i prodotti. Riprova più tardi.</Alert>
       ) : (
-        <ProductGrid
+        <PagedProductGrid
           products={products ?? []}
           emptyMessage="Nessun prodotto disponibile al momento."
         />
