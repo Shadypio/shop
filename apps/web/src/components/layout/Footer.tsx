@@ -37,7 +37,7 @@ export function Footer() {
         borderTop: 1,
         borderColor: 'divider',
         mt: 6,
-        pb: { xs: 8, sm: 0 },
+        pb: { xs: 2, sm: 0 },
       }}
     >
       <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3 }, py: 4 }}>
