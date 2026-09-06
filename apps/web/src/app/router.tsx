@@ -7,6 +7,11 @@ import { SearchResultsPage } from '../features/storefront/pages/SearchResultsPag
 import { CartPage } from '../features/storefront/pages/CartPage';
 import { CheckoutPage } from '../features/storefront/pages/CheckoutPage';
 import { OrderConfirmationPage } from '../features/storefront/pages/OrderConfirmationPage';
+import { PrivacyPolicyPage } from '../features/legal/pages/PrivacyPolicyPage';
+import { CookiePolicyPage } from '../features/legal/pages/CookiePolicyPage';
+import { TermsOfSalePage } from '../features/legal/pages/TermsOfSalePage';
+import { ReturnsPolicyPage } from '../features/legal/pages/ReturnsPolicyPage';
+import { ShippingPolicyPage } from '../features/legal/pages/ShippingPolicyPage';
 import { AdminLoginPage } from '../features/admin/pages/LoginPage';
 import { ProtectedRoute } from '../features/admin/components/ProtectedRoute';
 import { AdminLayout } from '../features/admin/components/AdminLayout';
@@ -28,6 +33,11 @@ export const router = createBrowserRouter([
       { path: 'carrello', element: <CartPage /> },
       { path: 'checkout', element: <CheckoutPage /> },
       { path: 'ordine-confermato', element: <OrderConfirmationPage /> },
+      { path: 'privacy', element: <PrivacyPolicyPage /> },
+      { path: 'cookie-policy', element: <CookiePolicyPage /> },
+      { path: 'termini-vendita', element: <TermsOfSalePage /> },
+      { path: 'recesso-resi', element: <ReturnsPolicyPage /> },
+      { path: 'spedizioni-e-consegne', element: <ShippingPolicyPage /> },
     ],
   },
   { path: '/admin/login', element: <AdminLoginPage /> },

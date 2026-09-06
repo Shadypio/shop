@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { Box, Container } from '@mui/material';
 import { AppHeader } from '../../../components/layout/AppHeader';
 import { Footer } from '../../../components/layout/Footer';
+import { CookieConsentBanner } from '../../../components/layout/CookieConsentBanner';
 import { CartDrawer } from '../../../components/domain/CartDrawer';
 import { CartBar } from '../../../components/layout/CartBar';
 import { useCartStore } from '../../../store/cart-store';
@@ -36,6 +37,7 @@ export function StorefrontLayout() {
       <Footer />
       <CartBar onOpenCart={() => setCartOpen(true)} />
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
+      <CookieConsentBanner />
     </Box>
   );
 }
